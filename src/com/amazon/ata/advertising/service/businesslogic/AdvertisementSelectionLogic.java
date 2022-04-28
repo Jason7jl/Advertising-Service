@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 /**
@@ -74,26 +75,41 @@ public class AdvertisementSelectionLogic {
 //
 //        return generatedAdvertisement;
 //    }
+//            final List<AdvertisementContent> contents = new ArrayList<>();
+//
+//                for (AdvertisementContent content : contentDao.get(marketplaceId)) {
+//
+//                    for (TargetingGroup group : targetingGroupDao.get(content.getContentId())) {
+//
+//                        TargetingPredicateResult targetingPredicateResult = new TargetingEvaluator(new RequestContext(customerId, marketplaceId)).evaluate(group);
+//
+//                            if (targetingPredicateResult.isTrue()) {
+//
+//                    contents.add(content);
+//                        }
+//
+//                    }
+//                if (!contents.isEmpty()) {
+//
+//                    AdvertisementContent randomAdvertisementContent = contents.get(random.nextInt(contents.size()));
+//                    generatedAdvertisement = new GeneratedAdvertisement(randomAdvertisementContent);
+//                }
+//            }
+//
+//        }
+//
+//        return generatedAdvertisement;
+//
             final List<AdvertisementContent> contents = new ArrayList<>();
 
-
-                for (AdvertisementContent content : contentDao.get(marketplaceId)) {
-
-                    for (TargetingGroup group : targetingGroupDao.get(content.getContentId())) {
-
-                        TargetingPredicateResult targetingPredicateResult = new TargetingEvaluator(new RequestContext(customerId, marketplaceId)).evaluate(group);
-
-                            if (targetingPredicateResult.isTrue()) {
-
-                    contents.add(content);
-                        }
-
-                    }
-                if (!contents.isEmpty()) {
-
-                    AdvertisementContent randomAdvertisementContent = contents.get(random.nextInt(contents.size()));
+            contentDao.get(marketplaceId).stream()
+                    .forEach(advertisementContent -> targetingGroupDao.get(advertisementContent.getContentId())
+                            .stream().filter(targetingGroup1 ->
+                                    new TargetingEvaluator(new RequestContext(customerId, marketplaceId)).evaluate(targetingGroup1).isTrue())
+                            .forEach(targetingGroup -> contents.add(advertisementContent)));
+            if (!contents.isEmpty()) {
+                AdvertisementContent randomAdvertisementContent = contents.get(random.nextInt(contents.size()));
                     generatedAdvertisement = new GeneratedAdvertisement(randomAdvertisementContent);
-                }
             }
 
         }
