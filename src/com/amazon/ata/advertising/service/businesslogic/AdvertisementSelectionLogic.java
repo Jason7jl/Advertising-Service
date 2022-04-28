@@ -76,33 +76,28 @@ public class AdvertisementSelectionLogic {
 //    }
             final List<AdvertisementContent> contents = new ArrayList<>();
 
-            if (CollectionUtils.isNotEmpty(contents)) {
+
                 for (AdvertisementContent content : contentDao.get(marketplaceId)) {
 
                     for (TargetingGroup group : targetingGroupDao.get(content.getContentId())) {
 
                         TargetingPredicateResult targetingPredicateResult = new TargetingEvaluator(new RequestContext(customerId, marketplaceId)).evaluate(group);
 
+                            if (targetingPredicateResult.isTrue()) {
 
-                        for (com.amazon.ata.advertising.service.targeting.predicate.TargetingPredicate targetingPredicate : group.getTargetingPredicates()) {
-
-                            if (targetingPredicate.equals(TargetingPredicateResult.TRUE)) {
-
-                                targetingPredicate.evaluate(new RequestContext(customerId, marketplaceId));
-
-                            }
-
+                    contents.add(content);
                         }
 
                     }
-                    contents.add(content);
-                }
+                if (!contents.isEmpty()) {
 
-                AdvertisementContent randomAdvertisementContent = contents.get(random.nextInt(contents.size()));
-                generatedAdvertisement = new GeneratedAdvertisement(randomAdvertisementContent);
+                    AdvertisementContent randomAdvertisementContent = contents.get(random.nextInt(contents.size()));
+                    generatedAdvertisement = new GeneratedAdvertisement(randomAdvertisementContent);
+                }
             }
-            return generatedAdvertisement;
+
         }
+
         return generatedAdvertisement;
     }
 }
