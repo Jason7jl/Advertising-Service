@@ -69,6 +69,8 @@ public class AddTargetingGroupActivity {
 //                        targetingPredicates)))
 //                .build();
 
+
+
         LOG.info(String.format("Adding targeting predicates [%s] to content with id: %s.",
                 request.getTargetingPredicates(),
                 request.getContentId()));

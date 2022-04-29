@@ -100,17 +100,25 @@ public class AdvertisementSelectionLogic {
 //
 //        return generatedAdvertisement;
 //
-            final List<AdvertisementContent> contents = new ArrayList<>();
 
-            contentDao.get(marketplaceId).stream()
+            TreeMap<TargetingGroup, AdvertisementContent> treeMap =
+                    new TreeMap<>(Comparator.comparingDouble(TargetingGroup::getClickThroughRate).reversed());
+
+            contentDao.get(marketplaceId)
                     .forEach(advertisementContent -> targetingGroupDao.get(advertisementContent.getContentId())
                             .stream().filter(targetingGroup1 ->
-                                    new TargetingEvaluator(new RequestContext(customerId, marketplaceId)).evaluate(targetingGroup1).isTrue())
-                            .forEach(targetingGroup -> contents.add(advertisementContent)));
-            if (!contents.isEmpty()) {
-                AdvertisementContent randomAdvertisementContent = contents.get(random.nextInt(contents.size()));
-                    generatedAdvertisement = new GeneratedAdvertisement(randomAdvertisementContent);
+                                    new TargetingEvaluator(new RequestContext(customerId, marketplaceId))
+                                            .evaluate(targetingGroup1).isTrue())
+                            .forEach(targetingGroup ->
+                                    treeMap.put(targetingGroup, advertisementContent)));
+
+            if (!treeMap.isEmpty()) {
+                generatedAdvertisement = new GeneratedAdvertisement(treeMap.firstEntry().getValue());
             }
+//            if (!contents.isEmpty()) {
+//                AdvertisementContent randomAdvertisementContent = contents.get(random.nextInt(contents.size()));
+//                    generatedAdvertisement = new GeneratedAdvertisement(randomAdvertisementContent);
+//            }
 
         }
 

@@ -16,7 +16,7 @@ import java.util.List;
  * A targeting group for an advertisement, required to show if this advertisement should be rendered.
  */
 @DynamoDBTable(tableName = "TargetingGroups")
-public class TargetingGroup {
+public class TargetingGroup /*implements Comparable<Double>*/ {
     public static final String CONTENT_ID_INDEX = "ContentIdIndex";
 
     @DynamoDBHashKey(attributeName = "TargetingGroupId")
@@ -86,4 +86,10 @@ public class TargetingGroup {
     public void setTargetingPredicates(List<TargetingPredicate> targetingPredicates) {
         this.targetingPredicates = targetingPredicates;
     }
+
+//    @Override
+//    public int compareTo(Double o) {
+//
+//        return (int) (o - clickThroughRate);
+//    }
 }
