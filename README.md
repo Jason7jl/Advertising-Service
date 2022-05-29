@@ -18,7 +18,7 @@ has a “Learn more” button.*
 
 * **content**: Refers to html of the ATA advertising content that is rendered and displayed to customers. Each content
   has one or more targeting groups assigned to it defining who can view this piece of content.
-    * example: `<div class="ata-ad">Need a New Career? Become a Software Developer, join ATA! <a href="https://w.amazon.com/bin/view/Amazon_Technical_Academy/">Learn more</a></div>`
+  * example: `<div class="ata-ad">Need a New Career? Become a Software Developer, join ATA! <a href="https://w.amazon.com/bin/view/Amazon_Technical_Academy/">Learn more</a></div>`
 * **targeting group**: a collection of targeting predicates and a click through rate associated with advertising
   content. Every targeting predicate within a targeting group is AND'd together. Each piece of advertising content can
   have multiple targeting groups. An example targeting group could be customers who are between ages 22-25 AND who have
